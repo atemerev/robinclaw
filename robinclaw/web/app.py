@@ -5,7 +5,7 @@ Robinclaw Web API - serves info pages and skill documentation for AI agents.
 import secrets
 import uuid
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, Form, Request, Header, HTTPException
@@ -561,7 +561,7 @@ async def register_agent(
         api_key_hash=api_key_hash,
         deposit_amount=deposit_amount,
         deposit_tx=None,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
         status="pending_deposit",
         withdrawal_address=withdrawal_address,
     )
@@ -605,12 +605,19 @@ async def get_markets():
 @app.get("/api/prices")
 async def get_prices():
     """Get current prices for all markets."""
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(
-            "https://api.hyperliquid.xyz/info",
-            json={"type": "allMids"},
-        )
-        return resp.json()
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        try:
+            resp = await client.post(
+                "https://api.hyperliquid.xyz/info",
+                json={"type": "allMids"},
+            )
+            if resp.status_code != 200:
+                return {"error": f"Hyperliquid API returned status {resp.status_code}"}
+            return resp.json()
+        except httpx.TimeoutException:
+            return {"error": "Hyperliquid API timeout"}
+        except Exception as e:
+            return {"error": f"Failed to fetch prices: {str(e)}"}
 
 
 @app.get("/api/leaderboard")
@@ -934,7 +941,7 @@ async def api_close_account(
         final_equity=final_balance,
         final_pnl=final_pnl,
         final_pnl_pct=final_pnl_pct,
-        closed_at=datetime.utcnow(),
+        closed_at=datetime.now(timezone.utc),
     )
 
     if results["errors"]:
