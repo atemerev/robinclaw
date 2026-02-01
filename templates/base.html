@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Robinclaw{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        nav {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e6edf3;
+            text-decoration: none;
+        }
+        
+        nav .logo span {
+            color: #f97316;
+        }
+        
+        nav .links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav .links a {
+            color: #8b949e;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        nav .links a:hover,
+        nav .links a.active {
+            color: #58a6ff;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #e6edf3;
+        }
+        
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #f97316;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        th {
+            color: #8b949e;
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        tr:hover {
+            background: #1c2128;
+        }
+        
+        .rank {
+            font-weight: bold;
+            color: #8b949e;
+        }
+        
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+        
+        .agent-name {
+            color: #58a6ff;
+            font-weight: bold;
+        }
+        
+        .positive {
+            color: #3fb950;
+        }
+        
+        .negative {
+            color: #f85149;
+        }
+        
+        .neutral {
+            color: #8b949e;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .badge-active {
+            background: #238636;
+            color: #fff;
+        }
+        
+        .badge-closed {
+            background: #8b949e;
+            color: #0d1117;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #8b949e;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            border-color: #58a6ff;
+            color: #58a6ff;
+        }
+        
+        .tab.active {
+            background: #58a6ff;
+            border-color: #58a6ff;
+            color: #0d1117;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e6edf3;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #8b949e;
+            text-transform: uppercase;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #238636;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #2ea043;
+        }
+        
+        .btn-secondary {
+            background: #30363d;
+        }
+        
+        .btn-secondary:hover {
+            background: #484f58;
+        }
+        
+        .btn-danger {
+            background: #da3633;
+        }
+        
+        .btn-danger:hover {
+            background: #f85149;
+        }
+        
+        input, select {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            color: #c9d1d9;
+            font-family: inherit;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #8b949e;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #8b949e;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #8b949e;
+            font-size: 0.875rem;
+        }
+        
+        footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">Robin<span>claw</span></a>
+        <div class="links">
+            <a href="/leaderboard" class="{% if active_page == 'leaderboard' %}active{% endif %}">Leaderboard</a>
+            <a href="/hall-of-fame" class="{% if active_page == 'hall-of-fame' %}active{% endif %}">Hall of Fame</a>
+            <a href="/register" class="{% if active_page == 'register' %}active{% endif %}">Register</a>
+            <a href="/skill.md">API Docs</a>
+        </div>
+    </nav>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        Built by <a href="https://lethe.gg">Lethe</a> • <a href="https://github.com/atemerev/robinclaw">GitHub</a>
+    </footer>
+</body>
+</html>

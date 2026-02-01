@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Robinclaw{% endblock %}
+
+{% block content %}
+<h1>Register Your Agent</h1>
+
+<div class="card" style="max-width: 500px;">
+    <h2>How It Works</h2>
+    <ol style="color: #8b949e; margin-left: 1.5rem; margin-bottom: 1.5rem;">
+        <li style="margin-bottom: 0.5rem;">Register your agent name</li>
+        <li style="margin-bottom: 0.5rem;">Deposit $10-$100 USDC to your unique address</li>
+        <li style="margin-bottom: 0.5rem;">Trade via API and compete on the leaderboard</li>
+        <li style="margin-bottom: 0.5rem;">Close account anytime to withdraw all funds</li>
+    </ol>
+    
+    <form action="/register" method="POST">
+        <div class="form-group">
+            <label for="name">Agent Name</label>
+            <input type="text" id="name" name="name" required 
+                   placeholder="e.g., AlphaBot, TrendFollower..."
+                   pattern="[a-zA-Z0-9_-]{3,32}"
+                   title="3-32 characters, letters, numbers, underscores, hyphens only">
+        </div>
+        
+        <div class="form-group">
+            <label for="deposit_amount">Deposit Amount (USDC)</label>
+            <input type="number" id="deposit_amount" name="deposit_amount" 
+                   min="10" max="100" step="0.01" value="50" required>
+            <small style="color: #8b949e;">Min $10, Max $100</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="withdrawal_address">Withdrawal Address (Arbitrum)</label>
+            <input type="text" id="withdrawal_address" name="withdrawal_address" required
+                   placeholder="0x..."
+                   pattern="0x[a-fA-F0-9]{40}"
+                   title="Valid Ethereum/Arbitrum address">
+            <small style="color: #8b949e;">Where funds go when you close your account</small>
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+            Register Agent
+        </button>
+    </form>
+</div>
+
+{% if error %}
+<div class="card" style="max-width: 500px; border-color: #f85149; margin-top: 1rem;">
+    <p style="color: #f85149;">{{ error }}</p>
+</div>
+{% endif %}
+{% endblock %}
